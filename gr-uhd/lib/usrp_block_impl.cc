@@ -212,6 +212,7 @@ void
 usrp_block_impl::_set_center_freq_from_internals_allchans()
 {
   while (_chans_to_tune.any()) {
+    _set_freq = true;
     // This resets() bits, so this loop should not run indefinitely
     _set_center_freq_from_internals(_chans_to_tune.find_first());
   }
@@ -560,7 +561,7 @@ void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t &tune_req, int
 {
   if (chan == -1) {
     for (size_t i = 0; i < _nchan; i++) {
-      _update_curr_tune_req(tune_req, int(i));
+      _update_curr_tune_req(tune_req, int(i));     
     }
     return;
   }
@@ -571,8 +572,8 @@ void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t &tune_req, int
       tune_req.dsp_freq != _curr_tune_req[chan].dsp_freq ||
       tune_req.dsp_freq_policy != _curr_tune_req[chan].dsp_freq_policy
       ) {
-    _curr_tune_req[chan] = tune_req;
-    _chans_to_tune.set(chan);
+     _curr_tune_req[chan] = tune_req;
+     _chans_to_tune.set(chan);
   }
 }
 
@@ -601,7 +602,6 @@ void usrp_block_impl::_cmd_handler_looffset(const pmt::pmt_t &lo_offset, int cha
   new_tune_request.rf_freq = new_tune_request.target_freq + lo_offs;
   new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
   new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_AUTO;
-
   _update_curr_tune_req(new_tune_request, chan);
 }
 
@@ -699,4 +699,5 @@ void usrp_block_impl::_cmd_handler_dspfreq(const pmt::pmt_t &dspfreq, int chan, 
 
   _update_curr_tune_req(new_tune_request, chan);
 }
+
 

@@ -19,7 +19,7 @@
 		<type>raw</type>
 	</param>
 	<param>
-		<name>Period (ms)</name>
+		<name>Period (us)</name>
 		<key>period</key>
 		<value>1000</value>
 		<type>real</type>

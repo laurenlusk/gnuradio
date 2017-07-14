@@ -132,6 +132,7 @@ namespace gr {
     {
       _curr_tune_req[chan] = tune_request;
       chan = _stream_args.channels[chan];
+      std::cout << "center frequency changed" << std::endl;
       return _dev->set_tx_freq(tune_request, chan);
     }
 

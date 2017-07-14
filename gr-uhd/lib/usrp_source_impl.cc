@@ -138,7 +138,7 @@ namespace gr {
       throw std::runtime_error("not implemented in this version");
 #endif
     }
-
+    
     ::uhd::tune_result_t
     usrp_source_impl::set_center_freq(const ::uhd::tune_request_t tune_request,
                                       size_t chan)
@@ -620,7 +620,7 @@ namespace gr {
       //In order to allow for low-latency:
       //We receive all available packets without timeout.
       //This call can timeout under regular operation...
-      size_t num_samps = _rx_stream->recv(
+          size_t num_samps = _rx_stream->recv(
           output_items,
           noutput_items,
           _metadata,
@@ -642,8 +642,9 @@ namespace gr {
       // handle possible errors conditions
       switch(_metadata.error_code) {
       case ::uhd::rx_metadata_t::ERROR_CODE_NONE:
-        if(_tag_now) {
+        if(_tag_now || _set_freq) {
           _tag_now = false;
+          _set_freq = false;
           //create a timestamp pmt for the first sample
           const pmt::pmt_t val = pmt::make_tuple
             (pmt::from_uint64(_metadata.time_spec.get_full_secs()),
@@ -667,7 +668,7 @@ namespace gr {
         _tag_now = true;
         //ignore overflows and try work again
         return work(noutput_items, input_items, output_items);
-
+        
       default:
         //GR_LOG_WARN(d_logger, boost::format("USRP Source Block caught rx error: %d") % _metadata.strerror());
         GR_LOG_WARN(d_logger, boost::format("USRP Source Block caught rx error code: %d") % _metadata.error_code);

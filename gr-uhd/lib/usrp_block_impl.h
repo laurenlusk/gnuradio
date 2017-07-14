@@ -214,7 +214,7 @@ namespace gr {
 
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
       virtual ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan) = 0;
-
+      bool _set_freq = false;
       //! Calls _set_center_freq_from_internals() on all channels
       void _set_center_freq_from_internals_allchans();
 
